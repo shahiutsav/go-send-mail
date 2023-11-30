@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	input_autocomplete "github.com/JoaoDanielRufino/go-input-autocomplete"
 	"github.com/joho/godotenv"
 	gomail "gopkg.in/gomail.v2"
 )
@@ -34,8 +35,17 @@ type EmailTemplateData struct {
 }
 
 func main() {
+
+	fmt.Println("Enter the name of the file that has data (must be csv): ")
+	filePath, err := input_autocomplete.Read("Path: ")
+
+	if err != nil {
+		fmt.Println("Error reading file path: ", err)
+		return
+	}
+
 	// Load variables from .env file
-	err := godotenv.Load()
+	err = godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
 	}
@@ -45,7 +55,7 @@ func main() {
 	// Interval between appointments
 	interval := 2 * time.Hour
 
-	prospects := loadProspectsFromCSV("data2.csv")
+	prospects := loadProspectsFromCSV(filePath)
 
 	// Number of prospects to schedule
 	numProspects := len(prospects)
